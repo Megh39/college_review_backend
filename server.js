@@ -2,8 +2,6 @@ const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
 const { connectDB } = require('./config/db');  // Import connectDB function
-console.log(__dirname);
-console.log(require.resolve('./config/db'));
 
 const app = express();
 const PORT = process.env.PORT || 5000;
