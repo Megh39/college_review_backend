@@ -10,26 +10,23 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 
-// ✅ Apply cors AFTER setting headers
+// ✅ CORS Middleware
 app.use(cors({
-    origin: "https://college-review-khaki.vercel.app",
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type, Authorization",
-
+    origin: "https://college-review-khaki.vercel.app", 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
 }));
 
-// ✅ Manually set CORS headers (extra security)
-app.use((req, res, next) => {
+// ✅ Explicitly Handle OPTIONS Requests
+app.options("*", (req, res) => {
     res.header("Access-Control-Allow-Origin", "https://college-review-khaki.vercel.app");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.header("Access-Control-Allow-Credentials", "true");
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(200);
-    }
-    next();
+    return res.sendStatus(200); // ✅ Ensure 200 OK for preflight requests
 });
+
 // Connect to MongoDB
 connectDB();
 
