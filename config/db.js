@@ -1,28 +1,18 @@
-// config/db.js
-const { MongoClient } = require('mongodb');
+const mongoose = require("mongoose");
 
-let db;
-
-async function connectDB() {
+const connectDB = async () => {
     try {
-        const client = new MongoClient(process.env.MONGODB_URI);
-        await client.connect();
-        db = client.db('college_review_db');
-        console.log('MongoDB connected');
-    } catch (err) {
-        console.error('MongoDB connection error:', err);
-        process.exit(1);
-    }
-}
+        await mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            dbName:"college_review_db"
+        });
+        console.log("✅ MongoDB Connected");
+    } catch (error) {
+        console.error("❌ MongoDB Connection Error:", error.message);
 
-function getDB() {
-    if (!db) {
-        throw new Error('Database not connected');
+        process.exit(1); // Exit process with failure
     }
-    return db;
-}
-
-module.exports = {
-    connectDB,   // Export the connectDB function
-    getDB        // Export the getDB function
 };
+
+module.exports = connectDB;
