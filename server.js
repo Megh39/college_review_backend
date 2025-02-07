@@ -16,6 +16,8 @@ app.use(cors({
     methods: "GET,POST,PUT,DELETE",
     credentials: true
 }));
+app.options("*", cors()); // ✅ Allow preflight requests
+
 // Connect to MongoDB
 connectDB();
 
