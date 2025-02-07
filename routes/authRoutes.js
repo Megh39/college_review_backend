@@ -3,6 +3,7 @@ const { registerUser, loginUser, getAllUsers } = require("../controllers/authCon
 
 const router = express.Router();
 
+// ✅ API Routes
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/users", getAllUsers);

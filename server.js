@@ -8,23 +8,22 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-
-// ✅ CORS Middleware
+// Middleware
+app.use(express.json()); // 🔴 Ensure JSON body parsing
 app.use(cors({
-    origin: "https://college-review-khaki.vercel.app", 
+    origin: "https://college-review-khaki.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
 }));
 
-// ✅ Explicitly Handle OPTIONS Requests
+// ✅ Ensure Preflight Requests Are Handled
 app.options("*", (req, res) => {
     res.header("Access-Control-Allow-Origin", "https://college-review-khaki.vercel.app");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.header("Access-Control-Allow-Credentials", "true");
-    return res.sendStatus(200); // ✅ Ensure 200 OK for preflight requests
+    return res.sendStatus(200);
 });
 
 // Connect to MongoDB
