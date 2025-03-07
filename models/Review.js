@@ -5,7 +5,7 @@ const ReviewSchema = new mongoose.Schema({
     user_id: { type: String, required: true },
     college_id: { type: String, required: true },
     course_name: { type: String, required: true },
-    rating: { type: Integer, required: true },
+    rating: { type: Number, required: true },
     feedback: { type: String, required: true },
     review_status: { type: String, required: true },
 }, { collection: "review_details" });
