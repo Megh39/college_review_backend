@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const Admin=require("../models/Admin")
 // Register User
 const registerUser = async (req, res) => {
-    const { username, email, password, age } = req.body;
+    const { username, email, password, age,college_name,course } = req.body;
 
     if (!username || !email || !password || !age) {
         return res.status(400).json({ message: "All fields are required" });
