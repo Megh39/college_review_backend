@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin")
+const Review = require("../models/Review");
+
 // Register User
 const registerUser = async (req, res) => {
     const { username, email, password, age, college_name, course } = req.body;
@@ -75,5 +77,32 @@ const getAllUsers = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+const submitReview = async (req, res) => {
+    const { user_id, college_id, course_name, rating, feedback } = req.body;
 
-module.exports = { registerUser, loginUser, getAllUsers };
+    if (!user_id || !college_id || !course_name || !rating || !feedback) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (rating < 1 || rating > 10) {
+        return res.status(400).json({ message: "Rating must be between 1 and 10" });
+    }
+
+    try {
+        const newReview = new Review({
+            user_id,
+            college_id,
+            course_name,
+            rating,
+            feedback,
+            review_status: "pending", // Default status
+        });
+
+        await newReview.save();
+        res.status(201).json({ message: "Review submitted successfully", review: newReview });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+module.exports = { registerUser, loginUser, getAllUsers,submitReview };

@@ -34,6 +34,7 @@ connectDB();
 // ✅ Ensure routes are registered
 app.use("/api/auth", authRoutes);
 
+
 // ✅ Start Server
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
