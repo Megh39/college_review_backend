@@ -2,8 +2,6 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin")
 const Review = require("../models/Review");
-
-// Register User
 const registerUser = async (req, res) => {
     const { username, email, password, age, college_name, course } = req.body;
 
@@ -17,10 +15,22 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ message: "Email already registered" });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, email, password: hashedPassword, age, college_name, course });
-        await newUser.save();
+        // Find the highest existing user_id
+        const lastUser = await User.findOne().sort({ user_id: -1 }); // Get user with max user_id
+        const newUserId = lastUser ? lastUser.user_id + 1 : 1; // Increment or start at 1
 
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({
+            user_id: newUserId,
+            username,
+            email,
+            password: hashedPassword,
+            age,
+            college_name,
+            course
+        });
+
+        await newUser.save();
         res.status(201).json({ message: "User registered successfully", user: newUser });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
