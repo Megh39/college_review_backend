@@ -113,7 +113,7 @@ const submitReview = async (req, res) => {
             course_name,
             rating,
             feedback,
-            review_status: "pending", // Default status
+            // review_status: "pending", // Default status
         });
 
         await newReview.save();

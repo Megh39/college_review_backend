@@ -7,7 +7,7 @@ const ReviewSchema = new mongoose.Schema({
     course_name: { type: String, required: true },
     rating: { type: Number, required: true },
     feedback: { type: String, required: true },
-    review_status: { type: String, required: true },
+    // review_status: { type: String, required: true },
 }, { collection: "review_details" });
 
 module.exports = mongoose.model("Review", ReviewSchema);
