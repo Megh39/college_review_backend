@@ -88,9 +88,15 @@ const getAllUsers = async (req, res) => {
     }
 };
 const submitReview = async (req, res) => {
-    const { user_id, college_id, course_name, rating, feedback } = req.body;
+    const { user_id, college_name, course_name, rating, feedback } = req.body;
+    const lastReview = await Review.findOne().sort({ review_id: -1 }); // Get review with max review_id
+    let newReviewId = "R1"; // Default for first review
 
-    if (!user_id || !college_id || !course_name || !rating || !feedback) {
+    if (lastReview && lastReview.review_id) {
+        const lastIdNumber = parseInt(lastReview.review_id.substring(1)); // Extract the number part
+        newReviewId = `R${lastIdNumber + 1}`; // Increment and create new ID
+    }
+    if (!user_id || !college_name || !course_name || !rating || !feedback) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -100,8 +106,10 @@ const submitReview = async (req, res) => {
 
     try {
         const newReview = new Review({
+            review_id: newReviewId,
+
             user_id,
-            college_id,
+            college_name,
             course_name,
             rating,
             feedback,
@@ -115,4 +123,4 @@ const submitReview = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, getAllUsers,submitReview };
+module.exports = { registerUser, loginUser, getAllUsers, submitReview };
