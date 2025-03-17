@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ✅ CORS Configuration
 app.use(cors({
-    origin: "https://college-review-khaki.vercel.app",
+    origin: ["https://college-review-khaki.vercel.app", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
@@ -22,6 +22,12 @@ app.use(cors({
 
 // ✅ Explicitly handle OPTIONS (Preflight requests)
 app.options("*", (req, res) => {
+    const allowedOrigins = ["https://college-review-khaki.vercel.app", "http://localhost:5173"];
+    const origin = req.headers.origin;
+
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+    }
     res.setHeader("Access-Control-Allow-Origin", "https://college-review-khaki.vercel.app");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
