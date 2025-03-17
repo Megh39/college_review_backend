@@ -3,13 +3,14 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const collegeRoutes = require('./routes/collegeRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ✅ Middleware to parse JSON request body
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // ✅ CORS Configuration
 app.use(cors({
@@ -33,6 +34,7 @@ connectDB();
 
 // ✅ Ensure routes are registered
 app.use("/api/auth", authRoutes);
+app.use('/api/colleges', collegeRoutes);
 
 
 // ✅ Start Server
