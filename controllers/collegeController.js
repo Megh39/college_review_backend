@@ -1,4 +1,5 @@
 const College = require('../models/College');
+require("dotenv").config();
 
 // ✅ Fetch all colleges
 const getAllColleges = async (req, res) => {
@@ -23,4 +24,23 @@ const getCollegeById = async (req, res) => {
     }
 };
 
-module.exports = { getAllColleges, getCollegeById };
+const fetchCollegeImage = async (collegeName) => {
+    try {
+        const response = await axios.get(`https://www.googleapis.com/customsearch/v1`, {
+            params: {
+                key: process.env.GOOGLE_API_KEY,
+                cx: process.env.GOOGLE_CX,
+                q: collegeName,
+                searchType: 'image',
+                num: 1
+            }
+        });
+
+        const imageUrl = response.data.items[0].link; // First image URL
+        return imageUrl;
+    } catch (error) {
+        console.error('Error fetching image:', error.message);
+        return null;
+    }
+};
+module.exports = { getAllColleges, getCollegeById,fetchCollegeImage };

@@ -28,7 +28,6 @@ app.options("*", (req, res) => {
     if (allowedOrigins.includes(origin)) {
         res.setHeader("Access-Control-Allow-Origin", origin);
     }
-    res.setHeader("Access-Control-Allow-Origin", "https://college-review-khaki.vercel.app");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -41,7 +40,6 @@ connectDB();
 // ✅ Ensure routes are registered
 app.use("/api/auth", authRoutes);
 app.use('/api/colleges', collegeRoutes);
-
 
 // ✅ Start Server
 app.listen(PORT, () => {
