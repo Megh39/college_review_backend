@@ -109,6 +109,7 @@ const submitReview = async (req, res) => {
             review_id: newReviewId,
 
             user_id,
+            username,
             college_name,
             course_name,
             rating,
