@@ -53,12 +53,12 @@ const addUser = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 // Update User
 const updateUser = async (req, res) => {
     const { username, email, password, age, college_name, course } = req.body;
     try {
-        const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ message: "User not found" });
+        const user = await User.findOne({ user_id: Number(req.params.id) }); // Use user_id        if (!user) return res.status(404).json({ message: "User not found" });
 
         if (username) user.username = username;
         if (email) user.email = email;
@@ -77,7 +77,7 @@ const updateUser = async (req, res) => {
 // Delete User
 const deleteUser = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const user = await User.findOne({ user_id: Number(req.params.id) }); // Use user_id
         if (!user) return res.status(404).json({ message: "User not found" });
 
         await user.remove();
@@ -189,7 +189,6 @@ const submitReview = async (req, res) => {
     try {
         const newReview = new Review({
             review_id: newReviewId,
-
             user_id,
             username,
             college_name,
