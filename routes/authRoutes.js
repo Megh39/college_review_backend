@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, loginUser, getAllUsers, submitReview, getAllReviewsAdmin,getAllApprovedReviews, addUser, deleteUser, updateUser, deleteReview, updateReview } = require("../controllers/authController");
+const { registerUser, loginUser, getAllUsers, submitReview, getAllReviewsAdmin, getAllApprovedReviews, addUser, deleteUser, updateUser, deleteReview, updateReview } = require("../controllers/authController");
 
 const router = express.Router();
 
@@ -11,9 +11,10 @@ router.post("/users", addUser);                 // POST /api/auth/users
 router.put("/users/:id", updateUser);           // PUT /api/auth/users/:id
 router.delete("/users/:id", deleteUser);        // DELETE /api/auth/users/:id
 router.post("/submit", submitReview);           // POST /api/auth/submit
-router.get("/approvedreviews",getAllApprovedReviews) //GET /api/auth/approvedreviews
+router.get("/approvedreviews", getAllApprovedReviews) //GET /api/auth/approvedreviews
 router.get("/reviews", getAllReviewsAdmin);          // GET /api/auth/reviews
 router.put("/reviews/:id", updateReview);       // PUT /api/auth/reviews/:id
+router.put("/reviews/approve/:id", updateReviewApproval); // PUT /api/auth/reviews/approve/:id
 router.delete("/reviews/:id", deleteReview);    // DELETE /api/auth/reviews/:id
 
 module.exports = router;

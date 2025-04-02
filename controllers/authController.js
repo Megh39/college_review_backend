@@ -221,5 +221,26 @@ const getAllApprovedReviews = async (req, res) => {
     }
 };
 
+const updateReviewApproval = async (req, res) => {
+    try {
+        const { review_id } = req.params;
+        const { approved } = req.body;
 
-module.exports = { registerUser, addUser, loginUser, getAllUsers,getAllApprovedReviews, submitReview, getAllReviewsAdmin, updateUser, deleteUser, updateReview, deleteReview };
+        const review = await Review.findOneAndUpdate(
+            { review_id: Number(review_id) }, 
+            { approved }, 
+            { new: true }
+        );
+
+        if (!review) {
+            return res.status(404).json({ message: "Review not found" });
+        }
+
+        res.json({ message: "Review approval status updated", review });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+
+module.exports = { updateReviewApproval,registerUser, addUser, loginUser, getAllUsers,getAllApprovedReviews, submitReview, getAllReviewsAdmin, updateUser, deleteUser, updateReview, deleteReview };
