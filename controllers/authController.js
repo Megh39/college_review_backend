@@ -122,5 +122,12 @@ const submitReview = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-
-module.exports = { registerUser, loginUser, getAllUsers, submitReview };
+const getAllReviews = async (req, res) => {
+    try {
+        const reviews = await Review.find();
+        res.json(reviews);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+module.exports = { registerUser, loginUser, getAllUsers, submitReview,getAllReviews };
