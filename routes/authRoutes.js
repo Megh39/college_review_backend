@@ -1,17 +1,18 @@
 const express = require("express");
-const { registerUser, loginUser, getAllUsers, submitReview,getAllReviews,addUser,deleteUser,updateUser,deleteReview,updateReview } = require("../controllers/authController");
+const { registerUser, loginUser, getAllUsers, submitReview, getAllReviews, addUser, deleteUser, updateUser, deleteReview, updateReview } = require("../controllers/authController");
 
 const router = express.Router();
 
-// ✅ API Routes
-router.post("/register", registerUser);
-router.post("/login", loginUser);
-router.get("/users", getAllUsers);
-router.post("/submit", submitReview);
-router.get('/reviews',getAllReviews);
-router.post('/api/auth/adduser',addUser);
-router.put('/api/auth/users/:id',updateUser);
-router.delete('/api/auth/users/:id',deleteUser);
-router.delete('/api/auth/reviews/:id',deleteReview);
-router.put('/api/auth/reivews/:id',updateReview);
+// API Routes (no /api/auth prefix here, as it’s added by app.use("/api/auth", authRoutes))
+router.post("/register", registerUser);         // POST /api/auth/register
+router.post("/login", loginUser);               // POST /api/auth/login
+router.get("/users", getAllUsers);              // GET /api/auth/users
+router.post("/users", addUser);                 // POST /api/auth/users
+router.put("/users/:id", updateUser);           // PUT /api/auth/users/:id
+router.delete("/users/:id", deleteUser);        // DELETE /api/auth/users/:id
+router.post("/submit", submitReview);           // POST /api/auth/submit
+router.get("/reviews", getAllReviews);          // GET /api/auth/reviews
+router.put("/reviews/:id", updateReview);       // PUT /api/auth/reviews/:id
+router.delete("/reviews/:id", deleteReview);    // DELETE /api/auth/reviews/:id
+
 module.exports = router;
