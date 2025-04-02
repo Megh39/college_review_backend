@@ -141,7 +141,7 @@ const getAllUsers = async (req, res) => {
 const updateReview = async (req, res) => {
     const { user_id, college_name, course_name, rating, feedback } = req.body;
     try {
-        const review = await Review.findById(req.params.id);
+        const review = await Review.findOne({ review_id: req.params.id });
         if (!review) return res.status(404).json({ message: "Review not found" });
 
         if (user_id) review.user_id = user_id;
@@ -150,8 +150,8 @@ const updateReview = async (req, res) => {
         if (rating) review.rating = rating;
         if (feedback) review.feedback = feedback;
 
-        await review.save();
-        res.json({ message: "Review updated", review });
+        await Review.updateOne({ review_id: req.params.id }, { $set: req.body });
+        res.status(200).json({ message: "Review updated successfully" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
@@ -160,11 +160,12 @@ const updateReview = async (req, res) => {
 // Delete Review
 const deleteReview = async (req, res) => {
     try {
-        const review = await Review.findById(req.params.id);
+        const review = await Review.findOne({ review_id: req.params.id });
         if (!review) return res.status(404).json({ message: "Review not found" });
 
-        await review.remove();
-        res.json({ message: "Review deleted" });
+
+        await Review.deleteOne({ review_id: req.params.id });
+        res.status(200).json({ message: "Review deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
