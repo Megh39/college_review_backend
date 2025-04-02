@@ -17,8 +17,7 @@ const registerUser = async (req, res) => {
 
         // Find the highest existing user_id
         const lastUser = await User.findOne().sort({ user_id: -1 }); // Get user with max user_id
-        const newUserId = lastUser ? lastUser.user_id + 1 : 1; // Increment or start at 1
-
+        const newUserId = lastUser ? Number(lastUser.user_id) + 1 : 1; // Convert to number and increment
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
             user_id: newUserId,
