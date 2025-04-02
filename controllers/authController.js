@@ -18,12 +18,11 @@ const registerUser = async (req, res) => {
         // Find the highest existing user_id
         const lastUser = await User.findOne().sort({ user_id: -1 }); // Get user with max user_id
         const newUserId = lastUser ? Number(lastUser.user_id) + 1 : 1; // Convert to number and increment
-        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
             user_id: newUserId,
             username,
             email,
-            password: hashedPassword,
+            password,
             age,
             college_name,
             course
@@ -45,8 +44,7 @@ const addUser = async (req, res) => {
         const lastUser = await User.findOne().sort({ user_id: -1 });
         const newUserId = lastUser ? Number(lastUser.user_id) + 1 : 1;
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ user_id: newUserId, username, email, password: hashedPassword, age, college_name, course });
+        const newUser = new User({ user_id: newUserId, username, email, password, age, college_name, course });
         await newUser.save();
         res.status(201).json({ message: "User added", user: newUser });
     } catch (error) {
@@ -62,7 +60,7 @@ const updateUser = async (req, res) => {
 
         if (username) user.username = username;
         if (email) user.email = email;
-        if (password) user.password = await bcrypt.hash(password, 10);
+        if (password) user.password = password; // Directly updating plain text password
         if (age) user.age = age;
         if (college_name) user.college_name = college_name;
         if (course) user.course = course;
@@ -114,8 +112,7 @@ const loginUser = async (req, res) => {
                 return res.status(401).json({ message: "Invalid email or password" });
             }
 
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
+            if (user.password !== password) { // Direct string comparison
                 return res.status(401).json({ message: "Invalid email or password" });
             }
         }
