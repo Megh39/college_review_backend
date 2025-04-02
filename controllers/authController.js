@@ -88,7 +88,7 @@ const getAllUsers = async (req, res) => {
     }
 };
 const submitReview = async (req, res) => {
-    const { user_id, college_name, course_name, rating, feedback } = req.body;
+    const { user_id,username, college_name, course_name, rating, feedback } = req.body;
     const lastReview = await Review.findOne().sort({ review_id: -1 }); // Get review with max review_id
     let newReviewId = "R1"; // Default for first review
 
@@ -131,4 +131,4 @@ const getAllReviews = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-module.exports = { registerUser, loginUser, getAllUsers, submitReview,getAllReviews };
+module.exports = { registerUser, loginUser, getAllUsers, submitReview, getAllReviews };
