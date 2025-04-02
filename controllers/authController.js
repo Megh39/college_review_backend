@@ -222,4 +222,4 @@ const getAllApprovedReviews = async (req, res) => {
 };
 
 
-module.exports = { registerUser, addUser, loginUser, getAllUsers,getAllApprovedReviews, submitReview, getAllReviews, updateUser, deleteUser, updateReview, deleteReview };
+module.exports = { registerUser, addUser, loginUser, getAllUsers,getAllApprovedReviews, submitReview, getAllReviewsAdmin, updateUser, deleteUser, updateReview, deleteReview };
