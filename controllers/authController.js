@@ -194,7 +194,6 @@ const submitReview = async (req, res) => {
             course_name,
             rating,
             feedback,
-            // review_status: "pending", // Default status
         });
 
         await newReview.save();
@@ -202,13 +201,25 @@ const submitReview = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-};
-const getAllReviews = async (req, res) => {
+};// Get ALL Reviews (Admin Only) - Includes Unapproved
+const getAllReviewsAdmin = async (req, res) => {
     try {
-        const reviews = await Review.find();
+        const reviews = await Review.find(); // Fetches all reviews, both approved and unapproved
         res.json(reviews);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-module.exports = { registerUser, addUser, loginUser, getAllUsers, submitReview, getAllReviews, updateUser, deleteUser, updateReview, deleteReview };
+
+// Get ONLY Approved Reviews (Users)
+const getAllApprovedReviews = async (req, res) => {
+    try {
+        const reviews = await Review.find({ approved: true }); // Fetches only approved reviews
+        res.json(reviews);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+
+module.exports = { registerUser, addUser, loginUser, getAllUsers,getAllApprovedReviews, submitReview, getAllReviews, updateUser, deleteUser, updateReview, deleteReview };
