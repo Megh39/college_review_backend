@@ -35,6 +35,57 @@ const registerUser = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+// Add User (already covered by registerUser, but keeping endpoint consistent)
+const addUser = async (req, res) => {
+    const { username, email, password, age, college_name, course } = req.body;
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) return res.status(400).json({ message: "Email already registered" });
+
+        const lastUser = await User.findOne().sort({ user_id: -1 });
+        const newUserId = lastUser ? Number(lastUser.user_id) + 1 : 1;
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ user_id: newUserId, username, email, password: hashedPassword, age, college_name, course });
+        await newUser.save();
+        res.status(201).json({ message: "User added", user: newUser });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+// Update User
+const updateUser = async (req, res) => {
+    const { username, email, password, age, college_name, course } = req.body;
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (username) user.username = username;
+        if (email) user.email = email;
+        if (password) user.password = await bcrypt.hash(password, 10);
+        if (age) user.age = age;
+        if (college_name) user.college_name = college_name;
+        if (course) user.course = course;
+
+        await user.save();
+        res.json({ message: "User updated", user });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// Delete User
+const deleteUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        await user.remove();
+        res.json({ message: "User deleted" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
 const loginUser = async (req, res) => {
     const { email, username, password } = req.body;
 
@@ -86,8 +137,40 @@ const getAllUsers = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+// Update Review
+const updateReview = async (req, res) => {
+    const { user_id, college_name, course_name, rating, feedback } = req.body;
+    try {
+        const review = await Review.findById(req.params.id);
+        if (!review) return res.status(404).json({ message: "Review not found" });
+
+        if (user_id) review.user_id = user_id;
+        if (college_name) review.college_name = college_name;
+        if (course_name) review.course_name = course_name;
+        if (rating) review.rating = rating;
+        if (feedback) review.feedback = feedback;
+
+        await review.save();
+        res.json({ message: "Review updated", review });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// Delete Review
+const deleteReview = async (req, res) => {
+    try {
+        const review = await Review.findById(req.params.id);
+        if (!review) return res.status(404).json({ message: "Review not found" });
+
+        await review.remove();
+        res.json({ message: "Review deleted" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
 const submitReview = async (req, res) => {
-    const { user_id,username, college_name, course_name, rating, feedback } = req.body;
+    const { user_id, username, college_name, course_name, rating, feedback } = req.body;
     const lastReview = await Review.findOne().sort({ review_id: -1 }); // Get review with max review_id
     let newReviewId = "R1"; // Default for first review
 
@@ -130,4 +213,4 @@ const getAllReviews = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-module.exports = { registerUser, loginUser, getAllUsers, submitReview, getAllReviews };
+module.exports = { registerUser, addUser, loginUser, getAllUsers, submitReview, getAllReviews, updateUser, deleteUser, updateReview, deleteReview };
