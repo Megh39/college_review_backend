@@ -77,10 +77,11 @@ const updateUser = async (req, res) => {
 // Delete User
 const deleteUser = async (req, res) => {
     try {
+        
         const user = await User.findOne({ user_id: Number(req.params.id) }); // Use user_id
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        await user.remove();
+        await User.deleteOne({ user_id: Number(req.params.id) });
         res.json({ message: "User deleted" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
