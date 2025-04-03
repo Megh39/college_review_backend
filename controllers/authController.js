@@ -34,6 +34,7 @@ const registerUser = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 // Add User (already covered by registerUser, but keeping endpoint consistent)
 const addUser = async (req, res) => {
     const { username, email, password, age, college_name, course } = req.body;
@@ -85,6 +86,7 @@ const deleteUser = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 const loginUser = async (req, res) => {
     const { email, username, password } = req.body;
 
@@ -126,6 +128,7 @@ const loginUser = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 // Get All Users
 const getAllUsers = async (req, res) => {
     try {
@@ -135,6 +138,7 @@ const getAllUsers = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 // Update Review
 const updateReview = async (req, res) => {
     const { user_id, college_name, course_name, rating, feedback } = req.body;
@@ -168,6 +172,7 @@ const deleteReview = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 const submitReview = async (req, res) => {
     const { user_id, username, college_name, course_name, rating, feedback } = req.body;
     const lastReview = await Review.findOne().sort({ review_id: -1 }); // Get review with max review_id
@@ -201,7 +206,9 @@ const submitReview = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-};// Get ALL Reviews (Admin Only) - Includes Unapproved
+};
+
+// Get ALL Reviews (Admin Only) - Includes Unapproved
 const getAllReviewsAdmin = async (req, res) => {
     try {
         const reviews = await Review.find(); // Fetches all reviews, both approved and unapproved
@@ -241,6 +248,39 @@ const updateReviewApproval = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+const resetPassword = async (req, res) => {
+    try {
+        const { username, newPassword, confirmNewPassword } = req.body;
+
+        if (newPassword !== confirmNewPassword) {
+            return res.status(400).json({
+                message: "Passwords do not match"
+            });
+        }
+
+        const user = await User.findOneAndUpdate(
+            { username: username },
+            { password: newPassword },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        res.json({
+            message: "Password reset successfully",
+            user
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error",
+            error: error.message
+        });
+    }
+};
 
 
-module.exports = { updateReviewApproval, registerUser, addUser, loginUser, getAllUsers, getAllApprovedReviews, submitReview, getAllReviewsAdmin, updateUser, deleteUser, updateReview, deleteReview };
+module.exports = { resetPassword, updateReviewApproval, registerUser, addUser, loginUser, getAllUsers, getAllApprovedReviews, submitReview, getAllReviewsAdmin, updateUser, deleteUser, updateReview, deleteReview };
