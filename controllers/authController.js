@@ -250,7 +250,7 @@ const updateReviewApproval = async (req, res) => {
 };
 const resetPassword = async (req, res) => {
     try {
-        const { username, newPassword, confirmNewPassword } = req.body;
+        const { username, newPassword, confirmPassword } = req.body; // FIXED
 
         if (newPassword !== confirmNewPassword) {
             return res.status(400).json({
