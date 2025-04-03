@@ -252,7 +252,7 @@ const resetPassword = async (req, res) => {
     try {
         const { username, newPassword, confirmPassword } = req.body; // FIXED
 
-        if (newPassword !== confirmNewPassword) {
+        if (newPassword !== confirmPassword) {
             return res.status(400).json({
                 message: "Passwords do not match"
             });
