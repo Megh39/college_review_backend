@@ -138,10 +138,19 @@ const getAllUsers = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-
-// Update Review
 const updateReview = async (req, res) => {
-    const { user_id, college_name, course_name, rating, feedback } = req.body;
+    const {
+        user_id,
+        college_name,
+        course_name,
+        overall_rating,
+        faculty_rating,
+        facility_rating,
+        placement_rating,
+        campus_life_rating,
+        feedback,
+    } = req.body;
+
     try {
         const review = await Review.findOne({ review_id: req.params.id });
         if (!review) return res.status(404).json({ message: "Review not found" });
@@ -149,10 +158,14 @@ const updateReview = async (req, res) => {
         if (user_id) review.user_id = user_id;
         if (college_name) review.college_name = college_name;
         if (course_name) review.course_name = course_name;
-        if (rating) review.rating = rating;
+        if (overall_rating) review.overall_rating = overall_rating;
+        if (faculty_rating) review.faculty_rating = faculty_rating;
+        if (facility_rating) review.facility_rating = facility_rating;
+        if (placement_rating) review.placement_rating = placement_rating;
+        if (campus_life_rating) review.campus_life_rating = campus_life_rating;
         if (feedback) review.feedback = feedback;
 
-        await Review.updateOne({ review_id: req.params.id }, { $set: req.body });
+        await review.save();
         res.status(200).json({ message: "Review updated successfully" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
@@ -172,22 +185,34 @@ const deleteReview = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-
 const submitReview = async (req, res) => {
-    const { user_id, username, college_name, course_name, rating, feedback } = req.body;
-    const lastReview = await Review.findOne().sort({ review_id: -1 }); // Get review with max review_id
-    let newReviewId = "R1"; // Default for first review
+    const {
+        user_id,
+        username,
+        college_name,
+        course_name,
+        overall_rating,
+        faculty_rating,
+        facility_rating,
+        placement_rating,
+        campus_life_rating,
+        feedback,
+    } = req.body;
+
+    const lastReview = await Review.findOne().sort({ review_id: -1 });
+    let newReviewId = "R1";
 
     if (lastReview && lastReview.review_id) {
-        const lastIdNumber = parseInt(lastReview.review_id.substring(1)); // Extract the number part
-        newReviewId = `R${lastIdNumber + 1}`; // Increment and create new ID
-    }
-    if (!user_id || !college_name || !course_name || !rating || !feedback) {
-        return res.status(400).json({ message: "All fields are required" });
+        const lastIdNumber = parseInt(lastReview.review_id.substring(1));
+        newReviewId = `R${lastIdNumber + 1}`;
     }
 
-    if (rating < 1 || rating > 10) {
-        return res.status(400).json({ message: "Rating must be between 1 and 10" });
+    if (
+        !user_id || !college_name || !course_name ||
+        !overall_rating || !faculty_rating || !facility_rating ||
+        !placement_rating || !campus_life_rating || !feedback
+    ) {
+        return res.status(400).json({ message: "All fields are required" });
     }
 
     try {
@@ -197,7 +222,11 @@ const submitReview = async (req, res) => {
             username,
             college_name,
             course_name,
-            rating,
+            overall_rating,
+            faculty_rating,
+            facility_rating,
+            placement_rating,
+            campus_life_rating,
             feedback,
         });
 
