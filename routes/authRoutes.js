@@ -15,6 +15,8 @@ router.get("/approvedreviews", getAllApprovedReviews) //GET /api/auth/approvedre
 router.get("/reviews", getAllReviewsAdmin);          // GET /api/auth/reviews
 router.put("/reviews/:id", updateReview);       // PUT /api/auth/reviews/:id
 router.put("/reviews/approve/:id", updateReviewApproval); // PUT /api/auth/reviews/approve/:id
+router.put("/approve/:review_id", updateReviewApproval);
+
 router.delete("/reviews/:id", deleteReview);    // DELETE /api/auth/reviews/:id
 router.post("/reset-password", resetPassword);
 module.exports = router;
