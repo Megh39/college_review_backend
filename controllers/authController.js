@@ -256,11 +256,12 @@ const getAllApprovedReviews = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-
 const updateReviewApproval = async (req, res) => {
     try {
         const { review_id } = req.params;
         const { approved } = req.body;
+
+        console.log("Approving review with ID:", review_id);
 
         const review = await Review.findOneAndUpdate(
             { review_id: review_id },
@@ -269,14 +270,19 @@ const updateReviewApproval = async (req, res) => {
         );
 
         if (!review) {
+            console.log("Review not found");
             return res.status(404).json({ message: "Review not found" });
         }
 
+        console.log("Updated Review:", review);
+
         res.json({ message: "Review approval status updated", review });
     } catch (error) {
+        console.error("Approval Error:", error.message);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 const resetPassword = async (req, res) => {
     try {
         const { username, newPassword, confirmPassword } = req.body; // FIXED
